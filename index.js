@@ -86,21 +86,48 @@ async function createConnection() {
   const client = new MongoClient("mongodb://localhost");
   await client.connect();
   console.log("Mongo is Connected 👍");
+  return client;
 }
 
-createConnection();
+const client = await createConnection();
+
+app.use(express.json());
 
 app.get("/", function (request, response) {
-  response.send("Hello World this is KLVP"); //
-});
-app.get("/movies", function (request, response) {
-  response.send(movies); //
+  response.send("Hello World this is KLVP");
 });
 
-app.get("/movies/:id", function (request, response) {
+app.get("/movies", async function (request, response) {
+  const movies = await client
+    .db("b27we")
+    .collection("movies")
+    .find({})
+    .toArray();
+  response.send(movies);
+});
+
+app.get("/movies/:id", async function (request, response) {
   const { id } = request.params;
+  // const movie = movies.find((movie) => movie.id == id);
+  const movie = await client
+    .db("b27we")
+    .collection("movies")
+    .findOne({ id: id });
   // response.send(...movies.filter((movie) => movie.id == id));   using filter method
-  response.send(movies.find((movie) => movie.id == id)); //using find method
+  // response.send(movies.find((movie) => movie.id == id)));    using find method
+  movie
+    ? response.send(movie)
+    : response.status(404).send({ message: "No such movie is found 😜" });
+});
+
+app.post("/movies", async function (request, response) {
+  const newMovies = request.body;
+  console.log(newMovies);
+  const result = await client
+    .db("b27we")
+    .collection("movies")
+    .insertMany(newMovies);
+  response.send(result);
 });
 
 app.listen(PORT, () => console.log(`Server started in ${PORT} port`));
