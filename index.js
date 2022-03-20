@@ -84,7 +84,8 @@ const app = express(); //creating express app
 //   },
 // ];
 
-const PORT = 4000; //port number to listen express
+// const PORT = 4000; //port number to listen express
+const PORT = process.env.PORT; //port number to listen express
 
 // const MONGO_URL = "mongodb://localhost";
 const MONGO_URL = process.env.MONGO_URL;
