@@ -15,12 +15,12 @@ import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", auth, async function (request, response) {
+router.get("/", async function (request, response) {
   const movies = await getAllMovies(); //mongoDB fetch only first 20 documents and returns cursor so we get error, toArray() is used here to get the entire data
   response.send(movies);
 });
 
-router.get("/:id", auth, async function (request, response) {
+router.get("/:id", async function (request, response) {
   const { id } = request.params;
   // const movie = movies.find((movie) => movie.id == id);
   const movie = await getMovieByID(id);
