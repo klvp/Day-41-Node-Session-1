@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 import { client } from "./index.js";
 
 async function createMovies(newMovies) {
-  return await client.db("b27we").collection("movies").insertMany(newMovies);
+  return await client.db("b27we").collection("movies").insertOne(newMovies);
 }
 
 async function createUser(newUser) {
